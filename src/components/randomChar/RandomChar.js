@@ -3,16 +3,16 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import MarvelServise from '../../services/MarvelServise';
 
-import './randomChar.scss';
+import mjolnir from "../../resources/img/mjolnir.png"
 
-import mjolnir from '../../resources/img/mjolnir.png';
+import './randomChar.scss';
 
 class RandomChar extends Component {
     state = {
         char: {},
         loading: true,
         error: false,
-        stil: false
+        stil: false,
 
     }
 
@@ -32,13 +32,24 @@ class RandomChar extends Component {
             char.description = "У этого персонажа нету описания";
         } if (char.description.length > 165) {
             char.description = char.description.slice(0, 165) + '...';
-        } if (char.thumbnail !== "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg") {
-            console.log("не равно заглушке")
+        } if (char.thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg") {
+            this.setState({
+                stil: true
+            })
+        } else {
+            this.setState({
+                stil: false
+            })
         }
         this.setState({
             char, 
             loading: false,
-            stil: true
+        })
+    }
+
+    onChatloading = () => {
+        this.setState({
+            loading: true,
         })
     }
 
@@ -51,6 +62,7 @@ class RandomChar extends Component {
 
     updateChar = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+        this.onChatloading();
         this.marvelServise 
             .getCharacters(id)
             .then(this.onChatLoaded)
@@ -58,10 +70,12 @@ class RandomChar extends Component {
     }
 
     render() {
-        const {char, loading, error} = this.state;
+        const {char, loading, error, stil} = this.state;
+        const stile = stil ? {objectFit: "contain"} : null;
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error) ? <View char={char}/> : null
+        const content = !(loading || error) ? <View char={char} stile={stile}/> : null
+
         return (
             <div className="randomchar">
                 {errorMessage}
@@ -86,11 +100,11 @@ class RandomChar extends Component {
     }
 }
 
-const View = ({char}) => {
+const View = ({char, stile}) => {
     const {name, description, thumbnail, homepage, wiki} = char;
     return (
-        <div className="randomchar__block">
-            <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+        <div className="randomchar__block"> 
+            <img style={stile} src={thumbnail} alt="Random character" className="randomchar__img"/>
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">{description}</p>

@@ -1,52 +1,53 @@
 import './charList.scss';
-import abyss from '../../resources/img/abyss.jpg';
+import { Component } from 'react';
+import MarvelServise from '../../services/MarvelServise';
 
-const CharList = () => {
-    return (
-        <div className="char__list">
-            <ul className="char__grid">
-                <li className="char__item">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-                <li className="char__item char__item_selected">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-                <li className="char__item">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-                <li className="char__item">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-                <li className="char__item">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-                <li className="char__item">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-                <li className="char__item">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-                <li className="char__item">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-                <li className="char__item">
-                    <img src={abyss} alt="abyss"/>
-                    <div className="char__name">Abyss</div>
-                </li>
-            </ul>
-            <button className="button button__main button__long">
-                <div className="inner">load more</div>
-            </button>
-        </div>
-    )
+
+
+
+
+
+class CharList extends Component {
+    state = {
+        chars: []
+    }
+
+    marvelServise = new MarvelServise();
+
+    componentDidMount() {
+        this.updateChars();
+    }
+
+    onChatsLoaded = (chars) => {
+        this.setState({chars})
+    }
+
+    updateChars = () => {
+        this.marvelServise
+            .getAllCharacters()
+            .then(this.onChatsLoaded)
+    }
+
+
+   
+    render() {
+        const {chars} = this.state;
+        return (
+            <div className="char__list">
+                <ul className="char__grid">
+                {chars.map(char => (
+                    <li key={char.id} onClick={() => this.props.onCharSelected(char.id)} className="char__item">
+                        <img src={char.thumbnail} alt={char.name} />
+                        <div className="char__name">{char.name}</div>
+                    </li>
+                ))}
+                </ul>
+                <button className="button button__main button__long">
+                    <div className="inner">load more</div>
+                </button>
+            </div>
+        )
+    }
 }
 
 export default CharList;
