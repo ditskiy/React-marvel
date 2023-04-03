@@ -10,6 +10,7 @@ const AppHeader = () => {
             </h1>
             <nav className="app__menu">
                 <ul>
+
                     <li><a href="#">Characters</a></li>
                     /
                     <li><a href="#">Comics</a></li>
