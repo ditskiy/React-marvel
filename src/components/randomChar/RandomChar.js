@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelServise from '../../services/MarvelServise';
+import useMarvelServise from '../../services/MarvelServise';
 
 import mjolnir from "../../resources/img/mjolnir.png"
 
@@ -9,25 +9,14 @@ import './randomChar.scss';
 
 const RandomChar = () => {
     const [char, setChar] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [stil, setStil] = useState(false);
-
-    const marvelServise = new MarvelServise();
+    const {loading, error, getCharacters, clearError} = useMarvelServise();
 
     useEffect(() => {
         updateChar();
     }, [])
 
-    // componentDidMount() {
-    //     this.updateChar();
-    //     // this.timerId = setInterval(this.updateChar, 3000);
-    // }
-    // componentWillUnmount() {
-    //     clearInterval(this.timerId);
-    // }
     
-
     const onChatLoaded = (char) => {
         if (!char.description) {
             char.description = "У этого персонажа нету описания";
@@ -39,25 +28,13 @@ const RandomChar = () => {
             setStil(false)
         }
         setChar(char)
-        setLoading(false)
-    }
-
-    const onChatloading = () => {
-        setLoading(true)
-    }
-
-    const onError = () => {
-        setLoading(false)
-        setError(true)
     }
 
     const updateChar = () => {
+        clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        onChatloading();
-        marvelServise 
-            .getCharacters(id)
-            .then(onChatLoaded)
-            .catch(onError)
+        getCharacters(id)
+            .then(onChatLoaded);
     }
 
 
