@@ -1,9 +1,8 @@
 import './comicsList.scss';
-import uw from '../../resources/img/UW.png';
-import xMen from '../../resources/img/x-men.png';
 
 import Spinner from '../spinner/Spinner';
 import { useState, useEffect } from 'react';
+import {Link} from "react-router-dom"
 import useMarvelServise from '../../services/MarvelServise';
 
 const ComicsList = () => {
@@ -42,14 +41,14 @@ const ComicsList = () => {
                 <li 
                     className="comics__item"
                     key={i}>
-                    <a href="#">
+                    <Link to={`/comics/${item.id}`}>
                         <img 
                         src={item.thumbnail} 
                         alt={item.title} 
                         className="comics__item-img"/>
                         <div className="comics__item-name">{item.title}</div>
-                        <div className="comics__item-price">${item.price}$</div>
-                    </a>
+                        <div className="comics__item-price">{item.price}$</div>
+                    </Link>
                 </li>
             )
         });
